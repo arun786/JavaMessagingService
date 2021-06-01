@@ -1,4 +1,4 @@
-package com.zrun.jms;
+package com.zrun.jms.procomsume;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 

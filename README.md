@@ -56,7 +56,7 @@ this is the default location where the jndi server runs.
 
 Name of the queue which will be dynamically created
 
-# first program of producer and consumer where message is dropped in the queue by producer and read by the consumer
+# First program of producer and consumer where message is dropped in the queue by producer and read by the consumer
 
         package com.zrun.jms;
 
@@ -98,6 +98,84 @@ Name of the queue which will be dynamically created
       }
 
 
+## Util class for creating Queue, Producer and Consumer
+
+            package com.zrun.jms.util;
+            
+            import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+            
+            import javax.jms.JMSConsumer;
+            import javax.jms.JMSContext;
+            import javax.jms.JMSProducer;
+            import javax.jms.Queue;
+            import javax.naming.InitialContext;
+            import javax.naming.NamingException;
+                    
+            public class QueueJms {
+                private final JMSContext jmsContext;
+                
+                public QueueJms() {
+                    ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+                    jmsContext = connectionFactory.createContext();
+                }
+                
+                /**
+                * @param queueName - name of the queue which is defined in jndi.properties
+                * @return - Jms Queue
+                * @throws NamingException - Exception Naming
+                */
+                public Queue createJMSQueue(String queueName) throws NamingException {
+                    InitialContext context = new InitialContext();
+                    return (Queue) context.lookup(queueName);
+                }
+                
+                /**
+                * it creates a producer
+                *
+                * @return JMSProducer
+                */
+                public JMSProducer createProducer() {
+                    return jmsContext.createProducer();
+                }
+                
+                /**
+                * It creates a Consumer
+                *
+                * @param queue - queue for which the consumer will listen
+                * @return JMSConsumer
+                */
+                public JMSConsumer createConsumer(Queue queue) {
+                    return jmsContext.createConsumer(queue);
+                }
+            }
+
+## use of util class
+
+
+            package com.zrun.jms.procomsume;
+
+            import com.zrun.jms.util.QueueJms;
+            
+            import javax.jms.JMSConsumer;
+            import javax.jms.JMSProducer;
+            import javax.jms.Queue;
+            import javax.naming.NamingException;
+            
+            public class DemoForProducerConsumer {
+                public static void main(String[] args) throws NamingException {
+                    QueueJms queueJms = new QueueJms();
+                    final Queue queue = queueJms.createJMSQueue("sd");
+                    
+                    final JMSProducer producer = queueJms.createProducer();
+                    //create a message and put in the queue
+                    producer.send(queue, "No Pain no gain");
+                    
+                    final JMSConsumer consumer = queueJms.createConsumer(queue);
+                    final String message = consumer.receiveBody(String.class);
+                    
+                    System.out.println("Message received : " + message);
+                }
+            }
 
 
 

@@ -1,2 +1,6 @@
-com/zrun/jms/ProducerConsumerDemo.java
- com.zrun.jms.ProducerConsumerDemo
+com/zrun/jms/procomsume/ProducerConsumerDemo.java
+ com.zrun.jms.procomsume.ProducerConsumerDemo
+com/zrun/jms/procomsume/DemoForProducerConsumer.java
+ com.zrun.jms.procomsume.DemoForProducerConsumer
+com/zrun/jms/util/QueueJms.java
+ com.zrun.jms.util.QueueJms
